@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+  <html style="height:100%;">
+    <head>
+      <title>ETES - Sell Tickets</title>
+                <link rel="shortcut icon" type="image/png" href="images/favicon_2016.png"/>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+
+      <link href="css/style.css" rel="stylesheet">
+
+      <script>
+          function getPara(){
+              var id = getParameterByName('user_id');
+              var msg = getParameterByName('msg');
+              if(id == null){
+                  alert('You need to log in first.');
+                  window.location = 'sign_up/signup.html';
+              }
+              else{
+                  if(msg == 'error'){
+                      alert('Error posting the ticket.');
+                  }
+                  else if(msg == 'success'){
+                      alert('Your tickets has been posted successfully.');
+                      window.location = 'userdashboard.html?user_id=' + id;
+                  }
+              }
+          }
+
+          function getParameterByName(name, url) {
+              if (!url) {
+                url = window.location.href;
+              }
+              name = name.replace(/[\[\]]/g, "\\$&");
+              var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                  results = regex.exec(url);
+              if (!results) return null;
+              if (!results[2]) return '';
+              return decodeURIComponent(results[2].replace(/\+/g, " "));
+          }
+          function gotodash(){
+              window.location = 'userdashboard.html?user_id=' + getParameterByName('user_id');
+            }
+
+          function goHome(){
+            var us_id = "index.html";
+            if (getParameterByName('user_id'))
+            {
+              us_id = 'index.html?user_id=' + getParameterByName('user_id');
+            }
+              window.location = us_id;
+          }
+
+          function goBuy(){
+            var us_id = 'ShoppingCart/index.php';
+            if (getParameterByName('user_id'))
+            {
+              us_id = 'ShoppingCart/index.php?user_id=' + getParameterByName('user_id');
+            }
+            window.location = us_id;
+          }
+
+          function goContact(){
+            var us_id = 'contact.php';
+            if (getParameterByName('user_id'))
+              {
+                us_id = 'contact.php?user_id=' + getParameterByName('user_id');
+              }
+            window.location = us_id; 
+          }
+      </script>
+
+    </head>
+<body onload="getPara()" style="height:100%;">
+
+<div class="topnav" id="myTopnav">
+  <a onclick="goContact()">Contact Us</a>
+  <a href="sign_up/signup.html">Logout </a>
+  <a onclick="goBuy()">Buy Tickets</a>
+  <a onclick="gotodash()">Dashboard</a>
+  <a onclick="goHome()">Home</a>
+</div>
+
+    
+
+
+      <div class="text-center">
+        <div class="container" id="buy">
+          <div class="row">
+
+
+            <div class="col-md-12">
+
+                <p><form><input type="search" name="search" placeholder="Search for tickets"></form></p><br />
+                <p></p>
+                <form action="php/Postticket.php" method="post">
+                    <div>User ID (unchangable)</div>
+                    <input placeholder="User ID" id="user_id" name="ID" type="text" required="" readonly="readonly" /><br>
+                    <script type="text/javascript">
+                    var id = document.getElementById("user_id");
+                    id.value = getParameterByName('user_id');
+                    </script>
+                    <input placeholder="Ticket Name" name="Name" type="text" maxlength="50" required="" /><br>
+                    <div>Ticket Details (Event date, Event Time, Type of Event, etc)</div>
+                    <input placeholder="Ticket Details" name="Detail" type="text" maxlength="70" required="" /><br>
+                    <input placeholder="Quantity" name="Quantity" type="number" min="1" maxlength="2"required="" /><br>
+                    <input placeholder="Price" name="Price" type="number" min="1" step="0.01" maxlength="3"required="" /><br>
+                    <div>Use a valid address, e.g. 101 Rainbow Way</div>
+                    <input placeholder = "Address" type="text" name="Address" id="address" pattern="[0-9]{0,4}[ ]{1}[A-Za-z ]{1,30}" title="Use a valid address, e.g. 101 Rainbow Way" required=""/><br>
+                    
+                    <input type='submit' value='Post Ticket'>
+                </form>
+                <p></p>
+
+
+              <!--
+              <h3>[ Sports | Concerts| Theater | Comedy ]<br/> Your one-stop destination for tickets.</h3>
+            -->
+              <br>
+
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+
+
+
+              <!--
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p> -->
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+</div>
+      <!--
+      <footer>
+
+        <p class="text-center">&copy;2017 Copyright ETES. All Rights Reserved.</p>
+      </footer>
+
+    -->
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+
+      <script type="text/javascript" src="js/jquery.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/signup.js"></script>
+    </body>
+</html>
+
+</html>

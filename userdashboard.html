@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta charset="UTF-8">
+<title>ETES - Dashboard</title>
+        <link rel="shortcut icon" type="image/png" href="images/favicon_2016.png"/>
+
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+
+      <link href="css/style.css" rel="stylesheet">
+<!--don't delete the following line-->
+<script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
+
+</head>
+<script>
+    function getData(){
+        var id = getParameterByName('user_id');
+        if(id == null){
+            alert('You need to log in first.');
+            window.location = 'sign_up/signup.html';
+        }
+        var obj, dbParam, xmlhttp, myObj, x, txt = "";
+        obj = { "table":"customers", "limit":20 };
+        dbParam = JSON.stringify(obj);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                myObj = JSON.parse(this.responseText);
+                txt += "<p>"
+                for (x in myObj) {
+                    txt += "User ID: "+myObj[x].user_id+" <br>Name: "+myObj[x].user_name+" <br>Email: "+myObj[x].user_email+" <br>Phone: "+myObj[x].user_phone+" <br>Address: "+myObj[x].user_address+" <br>Account Date Created: "+myObj[x].user_create_stmp+"<br><button id='edit_profile' onclick=goEdit()>Edit Profile</button>";
+                }
+                txt += "</p>"
+                document.getElementById("output").innerHTML = txt;
+            }
+        };
+        xmlhttp.open("POST", "php/UserDashboard.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("user_id=" + id);
+
+        var obj, dbParam, xmlhttp, myObj, x, foo = "";
+        obj = { "table":"tickets", "limit":20 };
+        dbParam = JSON.stringify(obj);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                myObj = JSON.parse(this.responseText);
+                foo += "<p>"
+                for (x in myObj) {
+                    foo += "Ticket ID: "+myObj[x].ticket_id+" <br>Ticket Name: "+myObj[x].ticket_name+" <br>Details: "+myObj[x].ticket_detail+" <br>Ticket Quantity: "+myObj[x].ticket_quantity+" <br>Ticket Price: $"+myObj[x].ticket_price +" <br>Posted by: "+myObj[x].ticket_postedby +" <br>Address: "+myObj[x].ticket_pickup_address+" <br>Posted on: "+myObj[x].ticket_stmp+"<br><a href='edit_ticket.html?user_id="+id+"&ticket_id="+myObj[x].ticket_id+"' style='color:#45ada8; font-size:16pt; '>Edit Ticket</a><br><br>";
+                        
+
+                }
+                foo += "</p>"
+                document.getElementById("tickets").innerHTML = foo;
+            }
+        };
+        xmlhttp.open("POST", "php/tickets.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("ticket_postedby=" + id);
+
+    }
+    function getOrder(){
+        var id = getParameterByName('user_id');
+        var obj, dbParam, xmlhttp, myObj, x, foo = "";
+        obj = { "table":"orders", "limit":20 };
+        dbParam = JSON.stringify(obj);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                myObj = JSON.parse(this.responseText);
+                foo += "<p>"
+                for (x in myObj) {
+                    foo += "Order ID: "+myObj[x].order_id+" <br>Order Buyer: "+myObj[x].order_buy_user_id+" <br>Order Seller: "+myObj[x].order_sell_user_id+" <br>Ticket Id: "+myObj[x].order_ticket_id+" <br>Ticket Quantity: "+myObj[x].order_ticket_quantity+" <br>Total Price: "+myObj[x].order_price+"<br>Order Time stamp: "+myObj[x].order_stmp+"<br>Ticket Name: "+myObj[x].ticket_name+"<br>Ticket Details: "+myObj[x].ticket_detail+"<br><br>";
+                }
+                foo += "</p>"
+                document.getElementById("orders").innerHTML = foo;
+            }
+        };
+        xmlhttp.open("POST", "php/UserOrder.php", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("user_id=" + id);
+    }
+    function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    function goHome(){
+          var us_id = "index.html";
+          if (getParameterByName('user_id'))
+          {
+            us_id = 'index.html?user_id=' + getParameterByName('user_id');
+          }
+            window.location = us_id;
+      }
+
+      function goToBuy(){
+            var us_id = 'ShoppingCart/index.php';
+            if (getParameterByName('user_id'))
+            {
+              us_id = 'ShoppingCart/index.php?user_id=' + getParameterByName('user_id');
+            }
+              window.location = us_id;
+      }
+
+      function goContact(){
+          var us_id = 'contact.php';
+          if (getParameterByName('user_id'))
+            {
+              us_id = 'contact.php?user_id=' + getParameterByName('user_id');
+            }
+          window.location = us_id;
+
+      }
+    function gotosell(){
+        window.location = 'sell_tickets.html?user_id=' + getParameterByName('user_id');
+    }
+    function goEdit(){
+        window.location = 'edit_profile.html?user_id=' + getParameterByName('user_id');
+    }
+    function displayEdit(){
+        var msg = getParameterByName('msg');
+        if(msg == 'edit_error'){
+            alert('Your profile has failed to be changed.');
+        }
+        else if(msg == 'edit_success'){
+            alert('Your profile has been changed successfully!');
+        }
+        else if(msg == 'edit_t_error'){
+            alert('Your ticket has failed to be changed.');
+        }
+        else if(msg == 'edit_t_success'){
+            alert('Your ticket has been changed successfully!');
+        }
+    }
+</script>
+
+<body onload="getData(); getOrder();displayEdit();">
+
+<div class="topnav" id="myTopnav">
+  <a onclick="goContact()">Contact Us</a>
+  <a href="sign_up/signup.html">Logout </a>
+  <a onclick="gotosell()">Sell Tickets</a>
+  <a onclick="goToBuy()">Buy Tickets</a>
+  <a onclick="goHome()">Home</a>
+</div>
+
+
+
+<div class="text-center">
+    <div class="container" id="buy">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="dash">
+                <h1>User Dashboard</h1>
+                    <div id="output"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="tix">
+                <h2 style="color:white;">My Tickets</h2>
+                    <div id="tickets">You don't have any tickets. Why not try listing some?</div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div id="tix">
+                <h2 style="color:white;">My Orders</h2>
+                    <div id="orders">You don't have any orders. Why not try buying some tickets?</div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
